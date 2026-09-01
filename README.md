@@ -1,297 +1,296 @@
-# Development Process
+# Parcel Flow
 
-This document describes the implementation approach and development sequence used for the Frontend Take Home Assignment.
+Parcel Flow is a responsive parcel delivery job management frontend built for the Frontend Take-Home Assignment.
 
-## 1. Created the React application with Vite
+The application allows users to view, search, filter, create, edit, and update delivery jobs. It also includes persistent light/dark mode support and Singapore address search with map preview using an external location API.
 
-I started by creating a React + TypeScript application using Vite.
+## Features
 
-Vite was selected because it provides a lightweight development environment, a fast development server, and a simple project structure suitable for this frontend assignment.
+- View existing delivery jobs in a data table
+- Search for a specific delivery job
+- Filter jobs by status and other available criteria
+- Add a new delivery job with form validation
+- Edit an existing delivery job
+- Update the status of one or multiple selected jobs
+- Search for valid Singapore addresses
+- Auto-populate address details, postal code, and coordinates from the selected address
+- Display the selected delivery location on a map
+- Switch between light and dark mode
+- Persist the selected theme using `localStorage`
+- Responsive desktop and mobile layouts
+- How-to-use page with a visual overview of the key user flows
 
-```bash
-npm create vite@latest
-```
-
----
-
-## 2. Installed the required frontend libraries
-
-I installed the main libraries required for the application, including React Router for navigation and Material UI (MUI) for the user interface.
-
-The main technologies used are:
+## Tech Stack
 
 - React
 - TypeScript
 - Vite
 - React Router
-- Material UI
+- Material UI (MUI)
+- MUI X Data Grid
+- Geoapify
+- Browser `localStorage`
 
-MUI was selected to provide consistent and accessible UI components such as tables, dialogs, form fields, buttons, autocomplete fields, and responsive layouts.
+No database is used. The initial application data is stored in static JSON files and loaded into memory.
 
----
+## Project Structure
 
-## 3. Defined the application routes
-
-I created an `AppRouter.tsx` file to keep the application's routing configuration in one location.
-
-The initial pages/routes were planned before implementing the individual screens:
+The application follows a feature-oriented React structure. Business-specific code is grouped by feature, while shared application concerns such as layouts, routing, themes, hooks, and domain types are kept separately.
 
 ```text
-/               Delivery Jobs
-/jobs           Delivery Jobs
-/jobs/:jobId    Job Details
+src/
+├── assets/
+│   └── keyUserFlow.png
+│
+├── data/
+│   ├── jobs.json
+│   └── senderCompanies.json
+│
+├── features/
+│   ├── address/
+│   │   ├── components/
+│   │   │   └── AddressMap.tsx
+│   │   └── services/
+│   │       └── addressService.ts
+│   │
+│   └── jobs/
+│       ├── components/
+│       │   ├── AddJobDialog.tsx
+│       │   ├── EditJobDialog.tsx
+│       │   ├── JobForm.tsx
+│       │   ├── JobList.tsx
+│       │   ├── JobsFilterBar.tsx
+│       │   ├── JobStatusChip.tsx
+│       │   ├── JobsToolbar.tsx
+│       │   └── UpdateStatusDialog.tsx
+│       ├── constants/
+│       │   └── jobOptions.ts
+│       └── types.ts
+│
+├── hooks/
+│   └── usePageTitle.ts
+│
+├── layouts/
+│   ├── components/
+│   │   ├── Header.tsx
+│   │   ├── MobileSidebar.tsx
+│   │   ├── Sidebar.tsx
+│   │   └── SidebarContent.tsx
+│   └── MainLayout.tsx
+│
+├── pages/
+│   ├── MainPage.tsx
+│   ├── HowToUsePage.tsx
+│   └── NotFound.tsx
+│
+├── routes/
+│   └── AppRouter.tsx
+│
+├── theme/
+│   ├── AppThemeProvider.tsx
+│   ├── ColorModeContext.ts
+│   └── theme.ts
+│
+├── types/
+│   ├── Address.ts
+│   ├── Job.ts
+│   └── SenderCompany.ts
+│
+└── main.tsx
 ```
 
-This separates navigation concerns from the individual page components and makes it easier to extend the application later.
+## Architecture Notes
 
----
+### Feature-oriented organisation
 
-## 4. Created the common application layout
+Business functionality is grouped under `features/`.
 
-I created a reusable `MainLayout` containing the application's common navigation components:
+For example, the `jobs` feature contains the job table, filters, toolbar, form, dialogs, feature-specific constants, and feature-specific types.
+
+The `address` feature is separated because it integrates with an external location service.
+
+### Layouts
+
+`MainLayout.tsx` provides the common application shell.
+
+The supporting navigation components are grouped under `layouts/components/`:
+
+- `Header.tsx`
+- `Sidebar.tsx`
+- `MobileSidebar.tsx`
+- `SidebarContent.tsx`
+
+`SidebarContent` is shared between the desktop sidebar and mobile drawer so navigation items and styling have a single source of truth.
+
+### Pages and routing
+
+Route-level screens are stored under `pages/`, while the route configuration is centralised in `routes/AppRouter.tsx`.
+
+React Router's `Outlet` is used by `MainLayout` so routed pages share the same header and navigation shell.
+
+### Jobs feature
+
+The main jobs feature is split into focused reusable components:
+
+- `JobList` — displays delivery jobs using MUI Data Grid
+- `JobsToolbar` — search and primary actions
+- `JobsFilterBar` — filtering controls
+- `JobForm` — shared form used for both Add and Edit flows
+- `AddJobDialog` — creates a new delivery job
+- `EditJobDialog` — edits an existing delivery job
+- `UpdateStatusDialog` — updates the status of one or multiple selected jobs
+- `JobStatusChip` — provides a consistent visual representation of job status
+
+The same `JobForm` is reused for both creating and editing jobs to avoid duplicated form logic.
+
+### Address feature
+
+Address functionality is separated into UI and external service responsibilities:
 
 ```text
-MainLayout
-├── Header
-├── Sidebar
-└── Page Content
+Job Form
+   ↓
+addressService
+   ↓
+Geoapify API
+   ↓
+Address suggestion selected
+   ↓
+Address / postal code / coordinates populated
+   ↓
+AddressMap
 ```
 
-React Router's `Outlet` is used inside the layout so that different pages can share the same application shell.
+`addressService.ts` handles communication with Geoapify, while `AddressMap.tsx` is responsible only for displaying the selected location.
 
-The header also displays an adaptive page title based on the currently selected route.
+### Static data
 
----
+The assignment specifies that a database should not be used.
 
-## 5. Implemented light and dark themes with persistent user preference
-
-I created a central MUI theme configuration supporting both light and dark modes.
-
-The theme is managed at the application level so that all components, including the header, sidebar, forms, tables, and dialogs, respond consistently to the selected theme.
-
-The user's selected theme is saved using `localStorage`.
+Initial job and sender-company records are therefore stored in:
 
 ```text
-User selects Dark Mode
-        ↓
-Theme state is updated
-        ↓
-Preference saved to localStorage
-        ↓
-Browser is closed
-        ↓
-Application is opened again
-        ↓
-Saved theme preference is restored
+src/data/jobs.json
+src/data/senderCompanies.json
 ```
 
-This was implemented specifically to fulfil **Requirement 5**:
+The data is loaded into application memory and subsequently managed using React state.
 
-> On the same page, have a button that can switch the table in (1) from light mode to dark mode and vice versa. Ensure that the mode is cached, i.e. the dark mode stays the same after closing the browser and re-launching the application again.
+### TypeScript models
 
----
+Shared domain models are stored under `src/types/`, including:
 
-## 6. Implemented responsive desktop and mobile layouts
+- `Job`
+- `Address`
+- `SenderCompany`
 
-I implemented responsive behaviour using MUI breakpoints so that the application remains usable when the browser is resized or accessed from a mobile device.
+Feature-specific types, such as job form input or filter state, remain inside `features/jobs/types.ts`.
 
-On desktop, the application uses a persistent sidebar and wider content layout.
+### Theme
 
-On mobile, the sidebar changes into a navigation drawer opened through a hamburger button in the header.
+The theme layer is separated into:
 
-Form layouts also adapt from multiple columns on larger screens to a single-column layout on smaller screens.
+- `theme.ts` — MUI palette and component theme configuration
+- `AppThemeProvider.tsx` — application-level theme provider and mode state
+- `ColorModeContext.ts` — exposes the colour mode toggle
 
-The same React application therefore supports:
+The selected light/dark mode is stored in `localStorage`, allowing the preference to persist after closing and reopening the browser.
 
-- Mobile
-- Tablet
-- Laptop
-- Desktop
+## Address Search
 
----
+The Buyer Address field uses Geoapify to search for valid Singapore addresses.
 
-## 7. Prepared the application's mock data and TypeScript models
-
-As the assignment specifies that a database should not be used, I created static JSON files that are loaded into memory when the application starts.
-
-The main mock datasets include:
+The search flow is:
 
 ```text
-jobs.json
-senderCompanies.json
-```
-
-I also created TypeScript interfaces and reusable constants for data such as:
-
-- Job
-- Address
-- Sender Company
-- Job Status
-- Parcel Type
-- Parcel Size
-- Delivery Options
-
-AI was used to assist with generating realistic initial dummy data. The generated data was then reviewed and adjusted to fit the application's data model and Singapore parcel-delivery use case.
-
----
-
-## 8. Implemented the Delivery Jobs page
-
-I then developed the main Delivery Jobs page.
-
-The initial JSON job records are loaded into React state and displayed in a table.
-
-This fulfils **Requirement 1**:
-
-> On a page, display JSON data in a table.
-
-The page also contains an **Add Delivery Job** button that opens a form for creating a new delivery job.
-
-This fulfils **Requirement 2**:
-
-> On the same page, create an 'Add Item' button that opens a form to allow users to enter data.
-
-The table displays information such as:
-
-```text
-Job ID
-Buyer
-Buyer Address
-Sender Company
-Parcel Type
-Status
-Delivery Date
-Actions
-```
-
----
-
-## 9. Implemented the Add Delivery Job form and validation
-
-I created the Add Delivery Job form as a reusable component displayed inside a dialog.
-
-The form contains fields such as:
-
-```text
-Buyer Name
-Buyer Address
-Unit Number
-Contact Number
-Sender Company
-Parcel Type
-Parcel Size
-Delivery Date
-Notes
-```
-
-Sender companies are populated from the hardcoded sender company data rather than entered manually by the user.
-
-Validation was added to the relevant form fields to prevent incomplete or invalid submissions.
-
-This fulfils **Requirement 3**:
-
-> Ensure the form fields have validation.
-
-After the form passes validation and is submitted, a new delivery job object is created and added to the existing React state.
-
-The table immediately displays the newly created job without requiring a database or page reload.
-
-This fulfils **Requirement 4**:
-
-> Upon submitting, the data in the form should be added to the table in (1).
-
----
-
-## 10. Implemented the Job Details page
-
-I created a Job Details page which can be accessed by selecting an individual delivery job.
-
-This page was added beyond the minimum assignment requirements to demonstrate routing, reusable components, and presentation of more detailed information.
-
-The page displays information including:
-
-- Buyer Information
-- Sender Company
-- Parcel Information
-- Delivery Information
-- Address
-- Map Location
-- Notes
-
----
-
-## 11. Integrated Singapore address autocomplete and map functionality
-
-For the bonus requirement, I added an external location service for Singapore addresses.
-
-Instead of requiring users to manually type an arbitrary address, the Buyer Address field provides address suggestions as the user types.
-
-The flow is:
-
-```text
-User types an address
+User enters an address
         ↓
-Address API is queried
+Clicks Search or presses Enter
         ↓
-Matching Singapore addresses are returned
+Geoapify API is queried
+        ↓
+Matching Singapore addresses are displayed
         ↓
 User selects an address
         ↓
-Address information and coordinates are stored
+Address, postal code and coordinates are populated
         ↓
-Map updates to show the selected location
+Map preview displays the selected delivery location
 ```
 
-The selected address is also displayed with a map pin to provide visual confirmation of the delivery location.
+## Responsive Design
 
-The external API logic is separated from the UI component through an address service layer to keep the implementation modular.
+The application uses MUI breakpoints to support different screen sizes.
 
-This was implemented for the **Bonus Requirement**:
+### Desktop
 
-> Make use of any external API to add new functionalities. For example, making use of a locations API to add a valid address.
+- Persistent sidebar
+- Wider table and form layout
 
----
+### Mobile
 
-## 12. Performed final testing and UI fine-tuning
+- Hamburger menu
+- Sidebar becomes a temporary navigation drawer
+- Forms adapt to a single-column layout
+- Content spacing adjusts for smaller viewports
 
-After completing the main functionality, I performed a final review of the application.
+The responsive layout can be tested by resizing the browser window.
 
-This included testing:
+## Assignment Requirements
 
-- JSON data loading
-- Job creation
-- Form validation
-- Table updates
-- Address autocomplete
-- Map location updates
-- Route navigation
-- Light/dark theme switching
-- Theme persistence after browser restart
-- Mobile responsiveness
-- Different browser widths
-- Empty and invalid form inputs
+| Requirement | Implementation |
+| --- | --- |
+| Display JSON data in a table | Delivery jobs are loaded from `jobs.json` and displayed using MUI Data Grid |
+| Add Item button opens a form | `Add Delivery Job` opens the reusable job form |
+| Form validation | Required fields, address, postal code, contact number, sender company, and delivery date are validated |
+| Submitted data appears in table | New jobs are added to React state and immediately displayed |
+| Persistent light/dark mode | Theme preference is stored in `localStorage` |
+| Bonus: external API | Geoapify is used for Singapore address search and map location |
+| Bonus: deployment | Application can be deployed to a free frontend hosting service |
 
-I also reviewed spacing, typography, responsive behaviour, accessibility labels, and consistency between light and dark themes.
+## Local Setup
 
----
+### 1. Clone the repository
 
-## 13. Deployed the frontend application
+```bash
+git clone https://github.com/agqy98/mha-app.git
+cd mha-app
+```
 
-As part of the bonus task, I deployed the completed frontend application to a free cloud hosting service so that the application can be accessed without requiring a local development environment.
-
-No paid cloud services were used for the assignment.
-
----
-
-## 14. Uploaded the source code to GitHub
-
-Finally, I uploaded the completed source code to a GitHub repository for submission.
-
-The repository contains the application source code, static JSON data, project configuration, and documentation required to run and review the project.
-
-The project can be run locally using:
+### 2. Install dependencies
 
 ```bash
 npm install
+```
+
+### 3. Configure the Geoapify API key
+
+Create a `.env` file in the project root:
+
+```env
+VITE_GEOAPIFY_API_KEY=your_geoapify_api_key
+```
+
+The `.env` file should not be committed to Git.
+
+### 4. Start the development server
+
+```bash
 npm run dev
 ```
+
+### 5. Build the application
+
+```bash
+npm run build
+```
+
+## Repository
+
+GitHub:
+
+https://github.com/agqy98/mha-app
+
+## Development Process
+
+A more detailed implementation sequence and development rationale can be documented separately in `DEVELOPMENT_PROCESS.md`.
