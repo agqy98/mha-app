@@ -1,0 +1,134 @@
+[
+  {
+    "id": "JOB-2001",
+    "buyerName": "Jason Tan",
+    "buyerAddress": {
+      "address": "123 Lorong 1 Toa Payoh",
+      "unit": "#04-56",
+      "postalCode": "310123",
+      "latitude": 1.3386,
+      "longitude": 103.8441
+    },
+    "contactNumber": "+65 9123 4567",
+    "senderCompanyId": "singpost",
+    "parcelType": "Document",
+    "parcelSize": "Small",
+    "weightKg": 0.5,
+    "status": "In Transit",
+    "deliveryDate": "2026-09-02",
+    "preferredTime": "09:00 - 13:00",
+    "deliveryOption": "Door-to-Door",
+    "notes": "Please call before delivery.",
+    "createdAt": "2026-08-29T09:15:00+08:00"
+  },
+  {
+    "id": "JOB-2002",
+    "buyerName": "Nurul Hidayah",
+    "buyerAddress": {
+      "address": "10 Tampines Central 1",
+      "unit": "#08-12",
+      "postalCode": "529536",
+      "latitude": 1.3547,
+      "longitude": 103.9437
+    },
+    "contactNumber": "+65 9234 5678",
+    "senderCompanyId": "ninjavan",
+    "parcelType": "Box",
+    "parcelSize": "Small",
+    "weightKg": 1.2,
+    "status": "Delivered",
+    "deliveryDate": "2026-08-30",
+    "preferredTime": "14:00 - 18:00",
+    "deliveryOption": "Door-to-Door",
+    "notes": "",
+    "createdAt": "2026-08-27T11:30:00+08:00"
+  },
+  {
+    "id": "JOB-2003",
+    "buyerName": "Marcus Lim",
+    "buyerAddress": {
+      "address": "21 Jurong Gateway Road",
+      "unit": "#15-03",
+      "postalCode": "608546",
+      "latitude": 1.3332,
+      "longitude": 103.7423
+    },
+    "contactNumber": "+65 8765 4321",
+    "senderCompanyId": "dhl",
+    "parcelType": "Box",
+    "parcelSize": "Medium",
+    "weightKg": 2.5,
+    "status": "Pending",
+    "deliveryDate": "2026-09-03",
+    "preferredTime": "09:00 - 13:00",
+    "deliveryOption": "Door-to-Door",
+    "notes": "Fragile glassware. Handle with care.",
+    "createdAt": "2026-08-30T14:20:00+08:00"
+  },
+  {
+    "id": "JOB-2004",
+    "buyerName": "Priya Sharma",
+    "buyerAddress": {
+      "address": "204 Bedok North Street 1",
+      "unit": "#09-80",
+      "postalCode": "460204",
+      "latitude": 1.3266,
+      "longitude": 103.9305
+    },
+    "contactNumber": "+65 9345 6789",
+    "senderCompanyId": "fedex",
+    "parcelType": "Document",
+    "parcelSize": "Small",
+    "weightKg": 0.3,
+    "status": "In Transit",
+    "deliveryDate": "2026-09-01",
+    "preferredTime": "10:00 - 14:00",
+    "deliveryOption": "Door-to-Door",
+    "notes": "Leave in mailbox if possible.",
+    "createdAt": "2026-08-28T16:00:00+08:00"
+  },
+  {
+    "id": "JOB-2005",
+    "buyerName": "Benjamin Ng",
+    "buyerAddress": {
+      "address": "1 Raffles Place",
+      "unit": "#20-01",
+      "postalCode": "048616",
+      "latitude": 1.2841,
+      "longitude": 103.8510
+    },
+    "contactNumber": "+65 9456 7890",
+    "senderCompanyId": "jnt",
+    "parcelType": "Box",
+    "parcelSize": "Large",
+    "weightKg": 5.8,
+    "status": "Delivered",
+    "deliveryDate": "2026-08-29",
+    "preferredTime": "09:00 - 18:00",
+    "deliveryOption": "Door-to-Door",
+    "notes": "Deliver to office reception.",
+    "createdAt": "2026-08-26T10:45:00+08:00"
+  },
+  {
+    "id": "JOB-2006",
+    "buyerName": "Grace Lee",
+    "buyerAddress": {
+      "address": "303C Punggol Central",
+      "unit": "#06-77",
+      "postalCode": "823303",
+      "latitude": 1.4029,
+      "longitude": 103.9058
+    },
+    "contactNumber": "+65 9567 8901",
+    "senderCompanyId": "singpost",
+    "parcelType": "Box",
+    "parcelSize": "Small",
+    "weightKg": 1.0,
+    "status": "Pending",
+    "deliveryDate": "2026-09-04",
+    "preferredTime": "14:00 - 18:00",
+    "deliveryOption": "Door-to-Door",
+    "notes": "",
+    "createdAt": "2026-08-31T08:30:00+08:00"
+  }
+]

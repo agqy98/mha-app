@@ -1,0 +1,37 @@
+[
+    {
+        "id": "singpost",
+        "name": "SingPost",
+        "serviceType": "Standard Delivery",
+        "contactNumber": "+65 6841 2000",
+        "active": true
+    },
+    {
+        "id": "ninjavan",
+        "name": "Ninja Van",
+        "serviceType": "Standard Delivery",
+        "contactNumber": "+65 6602 8271",
+        "active": true
+    },
+    {
+        "id": "jnt",
+        "name": "J&T Express",
+        "serviceType": "Standard Delivery",
+        "contactNumber": "+65 6939 6399",
+        "active": true
+    },
+    {
+        "id": "dhl",
+        "name": "DHL Express",
+        "serviceType": "Express Delivery",
+        "contactNumber": "+65 6285 8888",
+        "active": true
+    },
+    {
+        "id": "fedex",
+        "name": "FedEx",
+        "serviceType": "Express Delivery",
+        "contactNumber": "+65 6743 2626",
+        "active": true
+    }
+]
